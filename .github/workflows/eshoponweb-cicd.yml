@@ -87,6 +87,11 @@ jobs:
       with:
         name: bicep-template
         path: bicep-template
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}        
               
     # Publish website to Azure App Service (WebApp)
     - name: Publish Website to WebApp
