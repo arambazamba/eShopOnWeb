@@ -40,17 +40,19 @@ jobs:
         path: ${{env.DOTNET_ROOT}}/myapp
         
     # upload the bicep template as artifacts for next job
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v3
-      with:
-        name: bicep-template
-        path: ${{ env.TEMPLATE-FILE }}
+    # - name: Upload artifact for deployment job
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: bicep-template
+    #     path: ${{ env.TEMPLATE-FILE }}
   
   iac:
     runs-on: ubuntu-latest
     environment:
       name: 'Development'
     steps:
+    - uses: actions/checkout@v2
+
     - name: Azure Login
       uses: azure/login@v1
       with:
@@ -62,7 +64,7 @@ jobs:
       with:
         subscriptionId: ${{ env.SUBSCRIPTION-ID }}
         resourceGroupName: ${{ env.RESOURCE-GROUP }}
-        template: bicep-template/webapp.bicep
+        template: .azure/bicep/webapp.bicep
         parameters: 'webAppName=${{ env.WEBAPP-NAME }} location=${{ env.LOCATION }}'
         failOnStdErr: false   
         
@@ -82,11 +84,11 @@ jobs:
         path: .net-app
   
     #Download the bicep templates from previous job
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: bicep-template
-        path: bicep-template
+    # - name: Download artifact from build job
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: bicep-template
+    #     path: bicep-template
 
     - name: Azure Login
       uses: azure/login@v1
